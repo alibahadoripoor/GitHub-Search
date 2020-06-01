@@ -32,7 +32,7 @@ class RepositoriesService {
         return urlBuilder
     }()
     
-    static func getRepositoriesObjectFor(page: Int, query: String, completion: @escaping ObjectCompletion) {
+    static func getRepositoriesObject(for page: Int, query: String, completion: @escaping ObjectCompletion) {
         
         urlBuilder.path = "/search/repositories"
         urlBuilder.queryItems = [
@@ -64,9 +64,13 @@ class RepositoriesService {
 
     }
 
-    static func getRepositoryForks(ownerName: String, repoName: String, completion: @escaping RepositoryForksCompletion){
+    static func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping RepositoryForksCompletion){
         
         urlBuilder.path = "/repos/\(ownerName)/\(repoName)/forks"
+        urlBuilder.queryItems = [
+            URLQueryItem(name: "page", value: "\(page)")
+        ]
+        
         let url = urlBuilder.url!
         
         fetchDataFor(url: url) { (data, err) in
@@ -91,9 +95,13 @@ class RepositoriesService {
         
     }
    
-    static func getUserRepositories(ownerName: String, completion: @escaping UserRepositoriesCompletion){
+    static func getUserRepositories(for ownerName: String, page: Int, completion: @escaping UserRepositoriesCompletion){
         
         urlBuilder.path = "/users/\(ownerName)/repos"
+        urlBuilder.queryItems = [
+            URLQueryItem(name: "page", value: "\(page)")
+        ]
+        
         let url = urlBuilder.url!
         
         fetchDataFor(url: url) { (data, err) in

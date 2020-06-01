@@ -9,19 +9,19 @@
 import Foundation
 
 struct Object: Decodable {
-    let total_count: Int?
-    let items: [Repository]?
+    let total_count: Int
+    var items: [Repository]
 }
 
 struct Repository: Decodable {
-    let name: String?
+    let name: String
     let description: String?
-    let owner: User?
-    let forks: Int?
-    let watchers: Int?
+    let owner: User
+    let forks: Int
+    let watchers: Int
 }
 
 struct User: Decodable {
-    let login: String?
-    let avatar_url: String?
+    let login: String
+    let avatar_url: String
 }
