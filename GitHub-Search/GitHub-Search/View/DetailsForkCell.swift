@@ -12,11 +12,11 @@ class DetailsForkCell: BaseCell{
 
     weak var parentVC: DetailsTVC!
     
-    var user: DetailsForkCellVM? {
+    var forkUser: DetailsForkCellVM? {
         didSet{
-            guard let user = user else { return }
-            self.titleLabel.text = user.userName
-            self.profileImageView.setImage(for: user.userImageUrl)
+            guard let forkUser = forkUser else { return }
+            self.titleLabel.text = forkUser.userName
+            self.profileImageView.setImage(for: forkUser.userImageUrl)
         }
     }
     
@@ -57,7 +57,7 @@ class DetailsForkCell: BaseCell{
         profileImageView.image = UIImage()
         profileImageView.layer.borderColor = UIColor.customYellow.cgColor
         profileImageView.layer.borderWidth = 2
-        profileImageView.layer.cornerRadius = 20
+        profileImageView.layer.cornerRadius = 25
         profileImageView.layer.masksToBounds = true
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -65,7 +65,7 @@ class DetailsForkCell: BaseCell{
             profileImageView.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 10),
             profileImageView.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -10),
             profileImageView.leadingAnchor.constraint(equalTo: customBackgroundView.leadingAnchor, constant: 10),
-            profileImageView.widthAnchor.constraint(equalToConstant: 40)
+            profileImageView.widthAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -93,18 +93,18 @@ class DetailsForkCell: BaseCell{
         forwardImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            forwardImageView.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 20),
-            forwardImageView.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -20),
+            forwardImageView.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 27),
+            forwardImageView.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -27),
             forwardImageView.trailingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor, constant: -10),
-            forwardImageView.widthAnchor.constraint(equalToConstant: 30)
+            forwardImageView.widthAnchor.constraint(equalToConstant: 26)
         ])
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
-            guard let user = user else { return }
-            parentVC.showSearchResultTVC(for: user)
+            guard let forkUser = forkUser else { return }
+            parentVC.showSearchResultTVC(detailsHeader: nil, forkUser: forkUser)
         }
     }
     

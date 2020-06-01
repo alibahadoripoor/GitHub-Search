@@ -6,4 +6,82 @@
 //  Copyright © 2020 Ali Bahadori. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class DetailsHeaderView: BaseView {
+    
+    weak var paretVC: DetailsTVC!
+    
+    var detailsHeader: DetailsHeaderVM?{
+        didSet{
+            guard let detailsHeader = detailsHeader else { return }
+            profileImageView.setImage(for: detailsHeader.imageURL)
+            userNameButton.setTitle(detailsHeader.userName, for: .normal)
+            repoNameLabel.text = detailsHeader.repoName
+        }
+    }
+    
+    private let profileImageView = UIImageView()
+    private let userNameButton = UIButton(type: .system)
+    private let repoNameLabel = UILabel()
+    
+    override func setupViews() {
+        self.backgroundColor = .clear
+        setupProfileImageView()
+        setupUserNameButton()
+        setupRepoNameLabel()
+    }
+    
+    private func setupProfileImageView(){
+        addSubview(profileImageView)
+        
+        profileImageView.image = UIImage()
+        profileImageView.layer.borderColor = UIColor.customYellow.cgColor
+        profileImageView.layer.borderWidth = 2
+        profileImageView.layer.cornerRadius = 50
+        profileImageView.layer.masksToBounds = true
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            profileImageView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10),
+            profileImageView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            profileImageView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            profileImageView.widthAnchor.constraint(equalToConstant: 100)
+        ])
+    }
+    
+    private func setupUserNameButton(){
+        addSubview(userNameButton)
+        
+        userNameButton.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        userNameButton.tintColor = .customYellow
+        userNameButton.addTarget(self, action: #selector(userNameButtonButtonClicked), for: .touchUpInside)
+        userNameButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            userNameButton.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10),
+            userNameButton.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
+            userNameButton.trailingAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    private func setupRepoNameLabel(){
+        addSubview(repoNameLabel)
+        
+        repoNameLabel.text = "Not Repository Searched Yet"
+        repoNameLabel.font = .systemFont(ofSize: 22)
+        repoNameLabel.textColor = .white
+        repoNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            repoNameLabel.topAnchor.constraint(equalTo: userNameButton.bottomAnchor),
+            repoNameLabel.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            repoNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
+            repoNameLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    @objc private func userNameButtonButtonClicked(){
+        paretVC.showSearchResultTVC(detailsHeader: detailsHeader, forkUser: nil)
+    }
+}

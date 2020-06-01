@@ -29,7 +29,7 @@ class SearchVC: UIViewController {
     }
     
     deinit{
-        print("we do not have any retain cycle for SearchVC")
+        debugPrint("Not Any Retain Cycle For SearchVC")
     }
    
 }

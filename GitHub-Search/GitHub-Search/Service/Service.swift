@@ -126,7 +126,24 @@ class RepositoriesService {
         
     }
     
-    private static func fetchDataFor(url: URL,  completion: @escaping (Data?, HTTPError?) -> ()){
+    static func getProfileImageData(for avatarURL: String, completion: @escaping (Data?, HTTPError?) -> ()){
+        
+        guard let url = URL(string: avatarURL) else { return }
+        
+        fetchDataFor(url: url) { (data, err) in
+            
+            guard err == nil else{
+                completion(nil, err)
+                return
+            }
+            
+            guard let data = data else { return }
+            completion(data, nil)
+        }
+        
+    }
+    
+    private static func fetchDataFor(url: URL, completion: @escaping (Data?, HTTPError?) -> ()){
         let task = session.dataTask(with: url) { (data, response, error) in
                     
             DispatchQueue.main.async {

@@ -11,16 +11,19 @@ import UIKit
 class SearchResultTVC: UITableViewController {
 
     private let cellId = "searchCellId"
-    private var bottomIndicator = UIActivityIndicatorView(style: .medium)
     private var topIndicator = UIRefreshControl()
-    var isRefreshing = false
-    let viewModel = SearchResultVM()
-    var cells: [SearchResultCellVM] = []
-    var isLastPage = false
-    var nextPage = 1
+    private var centerIndicator = UIActivityIndicatorView(style: .medium)
+    private var bottomIndicator = UIActivityIndicatorView(style: .medium)
+    private let viewModel = SearchResultVM()
+    private let header = SearchResultHeaderView()
+    private var cells: [SearchResultCellVM] = []
+    private var isRefreshing = false
+    private var isLastPage = false
+    private var nextPage = 1
     
     var searchQuery: String?{
         didSet{
+            centerIndicator.startAnimating()
             reloadResults()
         }
     }
@@ -36,6 +39,12 @@ class SearchResultTVC: UITableViewController {
 
         setupTableView()
         setupNavigation()
+        setupIndicators()
+        
+        viewModel.fetchedHeader.bind { [weak self] (searchResultHeader) in
+            guard let self = self, let searchResultHeader = searchResultHeader else { return }
+            self.header.searchResultHeader = searchResultHeader
+        }
         
         viewModel.fetchedCells.bind { [weak self] (cells) in
             guard let self = self, let cells = cells else { return }
@@ -47,7 +56,15 @@ class SearchResultTVC: UITableViewController {
             self.nextPage += 1
             self.tableView.tableFooterView?.isHidden = true
             self.tableView.reloadData()
+            self.centerIndicator.stopAnimating()
             self.topIndicator.endRefreshing()
+        }
+        
+        viewModel.fetchedDetails.bind { [weak self] (detailsHeader) in
+            guard let self = self, let detailsHeader = detailsHeader else { return }
+            let detailsTVC = DetailsTVC(style: .grouped)
+            detailsTVC.detailsHeader = detailsHeader
+            self.navigationController?.pushViewController(detailsTVC, animated: true)
         }
         
         viewModel.isLastPage.bind { [weak self] (isLastPage) in
@@ -68,7 +85,7 @@ class SearchResultTVC: UITableViewController {
     }
     
     deinit{
-        print("we do not have any retain cycle for SearchResultTVC")
+        debugPrint("Not Any Retain Cycle For SearchResultTVC")
     }
     
     // MARK: - Table view data source
@@ -107,6 +124,14 @@ class SearchResultTVC: UITableViewController {
         }
         
     }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return header
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
 
 }
 
@@ -118,17 +143,6 @@ extension SearchResultTVC{
         tableView.backgroundColor = .customDarkBlue
         tableView.rowHeight = 145
         tableView.allowsSelection = false
-        
-        
-        topIndicator.addTarget(self, action: #selector(reloadResults), for: .valueChanged)
-        topIndicator.tintColor = .white
-        tableView.refreshControl = topIndicator
-        
-        bottomIndicator.startAnimating()
-        bottomIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
-        bottomIndicator.color = .white
-        tableView.tableFooterView = bottomIndicator
-        tableView.tableFooterView?.isHidden = true
         
     }
     
@@ -142,13 +156,31 @@ extension SearchResultTVC{
         navigationController?.navigationBar.barStyle = .black
         
         if navigationController?.viewControllers.count == 1 {
-            let searchBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "Search"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
+            let searchBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "search"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
             navigationItem.rightBarButtonItem = searchBarButtonItem
         }else{
             let homeBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "Home"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
             navigationItem.rightBarButtonItem = homeBarButtonItem
         }
         
+    }
+    
+    fileprivate func setupIndicators(){
+        topIndicator.addTarget(self, action: #selector(reloadResults), for: .valueChanged)
+        topIndicator.tintColor = .white
+        tableView.refreshControl = topIndicator
+        
+        view.addSubview(centerIndicator)
+        guard let navHeight = navigationController?.navigationBar.frame.height else { return }
+        centerIndicator.frame = CGRect(x: 0, y: -navHeight, width: view.frame.width, height: view.frame.height)
+        centerIndicator.hidesWhenStopped = true
+        centerIndicator.color = .white
+        
+        bottomIndicator.startAnimating()
+        bottomIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
+        bottomIndicator.color = .white
+        tableView.tableFooterView = bottomIndicator
+        tableView.tableFooterView?.isHidden = true
     }
     
     @objc private func leftBarButtonClicked(){
@@ -158,7 +190,6 @@ extension SearchResultTVC{
             guard let homeVC = navigationController?.viewControllers[0] else { return }
             navigationController?.popToViewController(homeVC, animated: true)
         }
-        
     }
     
     @objc dynamic private func reloadResults(){
@@ -178,10 +209,7 @@ extension SearchResultTVC{
     }
     
     func showDetailsTVC(for repo: SearchResultCellVM){
-        let detailsTVC = DetailsTVC()
-        detailsTVC.userName = repo.owner.login
-        detailsTVC.repoName = repo.name
-        navigationController?.pushViewController(detailsTVC, animated: true)
+        viewModel.fetchDetails(for: repo)
     }
     
     private func showSearchVC(){
