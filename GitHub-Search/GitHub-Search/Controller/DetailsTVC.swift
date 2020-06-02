@@ -100,7 +100,7 @@ class DetailsTVC: UITableViewController {
 
 extension DetailsTVC{
     
-    fileprivate func setupTableView(){
+    private func setupTableView(){
         
         tableView.register(DetailsForkCell.self, forCellReuseIdentifier: forksCellId)
         tableView.backgroundColor = .customDarkBlue
@@ -109,7 +109,7 @@ extension DetailsTVC{
         
     }
     
-    fileprivate func setupNavigation(){
+    private func setupNavigation(){
         
         title = "Details"
         navigationController?.navigationBar.tintColor = .customYellow
@@ -123,7 +123,7 @@ extension DetailsTVC{
         
     }
     
-    fileprivate func setupIndicators(){
+    private func setupIndicators(){
         topIndicator.addTarget(self, action: #selector(reloadDetails), for: .valueChanged)
         topIndicator.tintColor = .white
         tableView.refreshControl = topIndicator

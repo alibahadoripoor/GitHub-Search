@@ -24,7 +24,7 @@ class SearchResultVM{
             let cells = object.items.map({ return SearchResultCellVM(repo: $0) })
             self.fetchedCells.value = cells
            
-            if object.items.isEmpty {
+            if object.items.count < 30 {
                 self.isLastPage.value = true
             }
         }
@@ -39,7 +39,7 @@ class SearchResultVM{
             let cells = repos.map({ return SearchResultCellVM(repo: $0) })
             self.fetchedCells.value = cells
             
-            if repos.isEmpty {
+            if repos.count < 30 {
                 self.isLastPage.value = true
             }
         }

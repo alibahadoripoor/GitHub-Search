@@ -13,7 +13,7 @@ class SearchResultHeaderVM{
     
     init(totalCount: Int?, searchText: String) {
         if let totalCount = totalCount{
-            self.headerText = "\(totalCount) items for: \(searchText) "
+            self.headerText = "\(totalCount) items for: \(searchText)"
         }else{
             self.headerText = "\(searchText) Repositories"
         }

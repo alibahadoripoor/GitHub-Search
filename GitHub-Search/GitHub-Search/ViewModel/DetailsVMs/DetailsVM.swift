@@ -17,7 +17,7 @@ class DetailsVM{
         RepositoriesService.getRepositoryForks(for: userName, repoName: repoName, page: page) { [weak self] (repos, err) in
             guard let self = self, let repos = repos else {return}
             
-            if repos.isEmpty {
+            if repos.count < 30 {
                 self.isLastPage.value = true
             }
             

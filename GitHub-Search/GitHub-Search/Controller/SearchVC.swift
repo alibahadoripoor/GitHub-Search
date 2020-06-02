@@ -30,6 +30,11 @@ class SearchVC: UIViewController {
         hideKeyboard()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchView.becomeFirstResponder()
+    }
+    
     deinit{
         debugPrint("Not Any Retain Cycle For SearchVC")
     }
@@ -89,6 +94,7 @@ extension SearchVC{
         view.addSubview(searchView)
         
         searchView.delegate = self
+        searchView.keyboardAppearance = .dark
         searchView.layer.borderColor = UIColor.customYellow.cgColor
         searchView.barTintColor = .customDarkBlue
         searchView.tintColor = .customYellow

@@ -8,12 +8,15 @@
 
 import UIKit
 
+private let searchCellId = "searchCellId"
+
 class SearchResultTVC: UITableViewController {
 
-    private let cellId = "searchCellId"
+    
     private var topIndicator = UIRefreshControl()
     private var centerIndicator = UIActivityIndicatorView(style: .medium)
     private var bottomIndicator = UIActivityIndicatorView(style: .medium)
+    private let backImageView = UIImageView(image: #imageLiteral(resourceName: "Github-back"))
     private let viewModel = SearchResultVM()
     private let header = SearchResultHeaderView()
     private var cells: [SearchResultCellVM] = []
@@ -23,6 +26,7 @@ class SearchResultTVC: UITableViewController {
     
     var searchQuery: String?{
         didSet{
+            self.backImageView.alpha = 0
             centerIndicator.startAnimating()
             reloadResults()
         }
@@ -30,6 +34,7 @@ class SearchResultTVC: UITableViewController {
     
     var searchUserName: String?{
         didSet{
+            self.backImageView.alpha = 0
             reloadResults()
         }
     }
@@ -96,7 +101,7 @@ class SearchResultTVC: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! SearchResultCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: searchCellId, for: indexPath) as! SearchResultCell
         cell.repo = cells[indexPath.item]
         cell.parentVC = self
         if let count = navigationController?.viewControllers.count, count > 1{
@@ -137,16 +142,20 @@ class SearchResultTVC: UITableViewController {
 
 extension SearchResultTVC{
     
-    fileprivate func setupTableView(){
+    private func setupTableView(){
         
-        tableView.register(SearchResultCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(SearchResultCell.self, forCellReuseIdentifier: searchCellId)
         tableView.backgroundColor = .customDarkBlue
         tableView.rowHeight = 145
         tableView.allowsSelection = false
         
+        
+        backImageView.contentMode = .scaleAspectFit
+        tableView.backgroundView = backImageView
+        
     }
     
-    fileprivate func setupNavigation(){
+    private func setupNavigation(){
         
         title = "Search Results"
         navigationController?.navigationBar.tintColor = .customYellow
@@ -165,7 +174,7 @@ extension SearchResultTVC{
         
     }
     
-    fileprivate func setupIndicators(){
+    private func setupIndicators(){
         topIndicator.addTarget(self, action: #selector(reloadResults), for: .valueChanged)
         topIndicator.tintColor = .white
         tableView.refreshControl = topIndicator
