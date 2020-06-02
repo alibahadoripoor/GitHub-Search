@@ -13,11 +13,7 @@ class SearchResultHeaderView: BaseView {
     var searchResultHeader: SearchResultHeaderVM?{
         didSet{
             guard let searchResultHeader = searchResultHeader else { return }
-            if let total = searchResultHeader.totalCount{
-                self.label.text = "\(total) items for: \(searchResultHeader.searchText) "
-            }else{
-                self.label.text = "\(searchResultHeader.searchText) Repositories"
-            }
+            self.label.text = searchResultHeader.headerText
         }
     }
     

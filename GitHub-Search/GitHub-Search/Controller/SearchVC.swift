@@ -21,11 +21,13 @@ class SearchVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.view.backgroundColor = .customDarkBlue
         
         setupTopView()
         setupSearchView()
         setupSearchButton()
+        hideKeyboard()
     }
     
     deinit{
@@ -41,10 +43,10 @@ extension SearchVC{
         topView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            topView.topAnchor.constraint(equalTo: view.topAnchor),
-            topView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4)
+            topView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            topView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            topView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            topView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.4)
         ])
         
         setupCancelButton()
@@ -100,8 +102,8 @@ extension SearchVC{
         
         NSLayoutConstraint.activate([
             searchView.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            searchView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            searchView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            searchView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            searchView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             searchView.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
@@ -119,8 +121,9 @@ extension SearchVC{
         
         NSLayoutConstraint.activate([
             searchButton.topAnchor.constraint(equalTo: searchView.bottomAnchor, constant: 10),
-            searchButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            searchButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            searchButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            searchButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
             searchButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
@@ -138,5 +141,8 @@ extension SearchVC{
 extension SearchVC: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.searchBarText = searchText
+    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchButtonClicked()
     }
 }

@@ -18,14 +18,9 @@ class SearchResultCell: BaseCell{
             
             self.titleLabel.text = repo.name
             self.profileImageView.setImage(for: repo.owner.avatar_url)
-            self.forksAndWatchersLabel.text = "\(repo.forks) Forks   \(repo.watchers) Watchers"
+            self.forksAndWatchersLabel.text = repo.forksWathersText
             self.desLabel.text = repo.description ?? " "
-            
-            if repo.forks > 0{
-                self.detailsButton.alpha = 1
-            }else{
-                self.detailsButton.alpha = 0
-            }
+            self.detailsButton.alpha = CGFloat(repo.detailsButtonAlpha)
         }
     }
     

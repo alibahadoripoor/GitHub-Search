@@ -9,11 +9,13 @@
 import Foundation
 
 class SearchResultHeaderVM{
-    let searchText: String
-    let totalCount: Int?
+    let headerText: String
     
     init(totalCount: Int?, searchText: String) {
-        self.totalCount = totalCount
-        self.searchText = searchText
+        if let totalCount = totalCount{
+            self.headerText = "\(totalCount) items for: \(searchText) "
+        }else{
+            self.headerText = "\(searchText) Repositories"
+        }
     }
 }

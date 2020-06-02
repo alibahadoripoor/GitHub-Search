@@ -12,14 +12,20 @@ class SearchResultCellVM{
     let name: String
     let description: String?
     let owner: User
-    let forks: Int
-    let watchers: Int
+    let forksWathersText: String
+    let detailsButtonAlpha: Int
     
     init(repo: Repository) {
         self.name = repo.name
         self.description = repo.description
         self.owner = repo.owner
-        self.forks = repo.forks
-        self.watchers = repo.watchers
+        self.forksWathersText = "\(repo.forks) Forks   \(repo.watchers) Watchers"
+        
+        if repo.forks > 0{
+            self.detailsButtonAlpha = 1
+        }else{
+            self.detailsButtonAlpha = 0
+        }
     }
+    
 }
