@@ -10,13 +10,20 @@ import Foundation
 
 class SearchResultVM{
     
+    var service: RepositoriesServiceProtocol?
+    
     let fetchedHeader: Box<SearchResultHeaderVM?> = Box(nil)
     let fetchedCells: Box<[SearchResultCellVM]?> = Box(nil)
     let fetchedDetails: Box<DetailsHeaderVM?> = Box(nil)
     let isLastPage: Box<Bool?> = Box(nil)
+    
+    init(service: RepositoriesServiceProtocol = RepositoriesService()) {
+        self.service = service
+    }
 
     public func loadRepositories(for query: String, page: Int){
-        RepositoriesService.getRepositoriesObject(for: page, query: query) { [weak self] (object, err) in
+        guard let service = service else { return }
+        service.getRepositoriesObject(for: page, query: query) { [weak self] (object, err) in
             guard let self = self, let object = object else {return}
             
             self.fetchedHeader.value = SearchResultHeaderVM(totalCount: object.total_count, searchText: query)
@@ -31,7 +38,8 @@ class SearchResultVM{
     }
     
     public func loadUserRepositories(for userName: String, page: Int){
-        RepositoriesService.getUserRepositories(for: userName, page: page) { [weak self] (repos, err) in
+        guard let service = service else { return }
+        service.getUserRepositories(for: userName, page: page) { [weak self] (repos, err) in
             guard let self = self, let repos = repos else {return}
             
             self.fetchedHeader.value = SearchResultHeaderVM(totalCount: nil, searchText: userName)

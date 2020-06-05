@@ -13,9 +13,9 @@ class SearchResultVMTest: XCTestCase {
 
     func testLoadRepositoriesForQuery() {
         let expectation = self.expectation(description: "Load Repositories For Query")
-        let viewModel = SearchResultVM()
+        let viewModel = SearchResultVM(service: MockService())
         
-        viewModel.loadRepositories(for: "iOS", page: 1)
+        viewModel.loadRepositories(for: "", page: 1)
         
         viewModel.fetchedCells.bind { (cells) in
             if cells != nil{
@@ -23,14 +23,14 @@ class SearchResultVMTest: XCTestCase {
             }
         }
         
-        waitForExpectations(timeout: 8, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testLoadHeaderRepositoriesForQuery() {
         let expectation = self.expectation(description: "Load Header Repositories For Query")
-        let viewModel = SearchResultVM()
+        let viewModel = SearchResultVM(service: MockService())
 
-        viewModel.loadRepositories(for: "iOS", page: 1)
+        viewModel.loadRepositories(for: "", page: 1)
 
         viewModel.fetchedHeader.bind { (header) in
             if header != nil{
@@ -38,14 +38,14 @@ class SearchResultVMTest: XCTestCase {
             }
         }
 
-        waitForExpectations(timeout: 8, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     func testLoadUserRepositories() {
         let expectation = self.expectation(description: "Load User Repositories")
-        let viewModel = SearchResultVM()
+        let viewModel = SearchResultVM(service: MockService())
 
-        viewModel.loadUserRepositories(for: "nextcloud", page: 1)
+        viewModel.loadUserRepositories(for: "", page: 1)
 
         viewModel.fetchedCells.bind { (cells) in
             if let cells = cells, cells.count > 0{
@@ -53,14 +53,14 @@ class SearchResultVMTest: XCTestCase {
             }
         }
 
-        waitForExpectations(timeout: 8, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     func testLoadHeaderUserRepositories() {
         let expectation = self.expectation(description: "Load Header User Repositories")
-        let viewModel = SearchResultVM()
+        let viewModel = SearchResultVM(service: MockService())
 
-        viewModel.loadUserRepositories(for: "nextcloud", page: 1)
+        viewModel.loadUserRepositories(for: "", page: 1)
 
         viewModel.fetchedHeader.bind { (header) in
             if header != nil{
@@ -68,7 +68,7 @@ class SearchResultVMTest: XCTestCase {
             }
         }
 
-        waitForExpectations(timeout: 8, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
 }

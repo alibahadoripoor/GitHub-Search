@@ -16,23 +16,31 @@ enum HTTPError: Error {
     case invalidData
 }
 
-class RepositoriesService {
+typealias fetchDataCompletion = (Data?, HTTPError?) -> ()
+typealias ObjectCompletion = (Object?, HTTPError?) -> ()
+typealias RepositoryForksCompletion = ([Repository]?, HTTPError?) -> ()
+typealias UserRepositoriesCompletion = ([Repository]?, HTTPError?) -> ()
+typealias ProfileImageCompletion = (Data?, HTTPError?) -> ()
+
+protocol RepositoriesServiceProtocol: class {
+    func getRepositoriesObject(for page: Int, query: String, completion: @escaping ObjectCompletion)
+    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping RepositoryForksCompletion)
+    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping UserRepositoriesCompletion)
+    func getProfileImageData(for avatarURL: String, completion: @escaping ProfileImageCompletion)
+}
+
+class RepositoriesService: RepositoriesServiceProtocol {
     
-    typealias fetchDataCompletion = (Data?, HTTPError?) -> ()
-    typealias ObjectCompletion = (Object?, HTTPError?) -> ()
-    typealias RepositoryForksCompletion = ([Repository]?, HTTPError?) -> ()
-    typealias UserRepositoriesCompletion = ([Repository]?, HTTPError?) -> ()
+    private let session: URLSession = .shared
     
-    private static let session: URLSession = .shared
-    
-    private static var urlBuilder: URLComponents = {
+    private var urlBuilder: URLComponents = {
         var urlBuilder = URLComponents()
-        urlBuilder.scheme = "https"
+        urlBuilder.scheme = "https" 
         urlBuilder.host = "api.github.com"
         return urlBuilder
     }()
     
-    static func getRepositoriesObject(for page: Int, query: String, completion: @escaping ObjectCompletion) {
+    func getRepositoriesObject(for page: Int, query: String, completion: @escaping ObjectCompletion) {
         
         urlBuilder.path = "/search/repositories"
         urlBuilder.queryItems = [
@@ -42,7 +50,7 @@ class RepositoriesService {
         
         let url = urlBuilder.url!
    
-        fetchDataFor(url: url) { (data, err) in
+        fetchData(for: url) { (data, err) in
             
             guard err == nil else{
                 completion(nil, err)
@@ -64,7 +72,7 @@ class RepositoriesService {
 
     }
 
-    static func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping RepositoryForksCompletion){
+    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping RepositoryForksCompletion){
         
         urlBuilder.path = "/repos/\(ownerName)/\(repoName)/forks"
         urlBuilder.queryItems = [
@@ -73,7 +81,7 @@ class RepositoriesService {
         
         let url = urlBuilder.url!
         
-        fetchDataFor(url: url) { (data, err) in
+        fetchData(for: url) { (data, err) in
             
             guard err == nil else{
                 completion(nil, err)
@@ -95,7 +103,7 @@ class RepositoriesService {
         
     }
    
-    static func getUserRepositories(for ownerName: String, page: Int, completion: @escaping UserRepositoriesCompletion){
+    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping UserRepositoriesCompletion){
         
         urlBuilder.path = "/users/\(ownerName)/repos"
         urlBuilder.queryItems = [
@@ -104,7 +112,7 @@ class RepositoriesService {
         
         let url = urlBuilder.url!
         
-        fetchDataFor(url: url) { (data, err) in
+        fetchData(for: url) { (data, err) in
             
             guard err == nil else{
                 completion(nil, err)
@@ -126,11 +134,11 @@ class RepositoriesService {
         
     }
     
-    static func getProfileImageData(for avatarURL: String, completion: @escaping (Data?, HTTPError?) -> ()){
+    func getProfileImageData(for avatarURL: String, completion: @escaping (Data?, HTTPError?) -> ()){
         
         guard let url = URL(string: avatarURL) else { return }
         
-        fetchDataFor(url: url) { (data, err) in
+        fetchData(for: url) { (data, err) in
             
             guard err == nil else{
                 completion(nil, err)
@@ -143,7 +151,7 @@ class RepositoriesService {
         
     }
     
-    private static func fetchDataFor(url: URL, completion: @escaping (Data?, HTTPError?) -> ()){
+    private func fetchData(for url: URL, completion: @escaping (Data?, HTTPError?) -> ()){
         let task = session.dataTask(with: url) { (data, response, error) in
                     
             DispatchQueue.main.async {

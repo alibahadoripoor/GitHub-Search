@@ -10,11 +10,18 @@ import Foundation
 
 class DetailsVM{
     
+    var service: RepositoriesServiceProtocol?
+    
     let isLastPage: Box<Bool?> = Box(nil)
     let fetchedCells: Box<[DetailsForkCellVM]?> = Box(nil)
     
+    init(service: RepositoriesServiceProtocol = RepositoriesService()) {
+        self.service = service
+    }
+    
     public func loadRepositoriesForks(for userName: String,repoName: String, page: Int){
-        RepositoriesService.getRepositoryForks(for: userName, repoName: repoName, page: page) { [weak self] (repos, err) in
+        guard let service = service else { return }
+        service.getRepositoryForks(for: userName, repoName: repoName, page: page) { [weak self] (repos, err) in
             guard let self = self, let repos = repos else {return}
             
             if repos.count < 30 {

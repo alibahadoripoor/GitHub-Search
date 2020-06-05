@@ -106,6 +106,7 @@ extension DetailsTVC{
         tableView.backgroundColor = .customDarkBlue
         tableView.rowHeight = 80
         tableView.allowsSelection = true
+        tableView.separatorStyle = .none
         
     }
     

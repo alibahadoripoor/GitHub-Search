@@ -12,7 +12,6 @@ private let searchCellId = "searchCellId"
 
 class SearchResultTVC: UITableViewController {
 
-    
     private var topIndicator = UIRefreshControl()
     private var centerIndicator = UIActivityIndicatorView(style: .medium)
     private var bottomIndicator = UIActivityIndicatorView(style: .medium)
@@ -35,6 +34,7 @@ class SearchResultTVC: UITableViewController {
     var searchUserName: String?{
         didSet{
             self.backImageView.alpha = 0
+            centerIndicator.startAnimating()
             reloadResults()
         }
     }
@@ -63,6 +63,9 @@ class SearchResultTVC: UITableViewController {
             self.tableView.reloadData()
             self.centerIndicator.stopAnimating()
             self.topIndicator.endRefreshing()
+            if self.cells.isEmpty{
+                self.backImageView.alpha = 1
+            }
         }
         
         viewModel.fetchedDetails.bind { [weak self] (detailsHeader) in
@@ -148,7 +151,7 @@ extension SearchResultTVC{
         tableView.backgroundColor = .customDarkBlue
         tableView.rowHeight = 145
         tableView.allowsSelection = false
-        
+        tableView.separatorStyle = .none
         
         backImageView.contentMode = .scaleAspectFit
         tableView.backgroundView = backImageView

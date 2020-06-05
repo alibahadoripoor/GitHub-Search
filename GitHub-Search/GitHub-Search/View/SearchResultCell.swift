@@ -12,15 +12,22 @@ class SearchResultCell: BaseCell{
 
     weak var parentVC: SearchResultTVC!
     
+    var imageLoader = ProfileImageLoaderVM()
+    
     var repo: SearchResultCellVM? {
         didSet{
             guard let repo = repo else { return }
             
             self.titleLabel.text = repo.name
-            self.profileImageView.setImage(for: repo.owner.avatar_url)
             self.forksAndWatchersLabel.text = repo.forksWathersText
             self.desLabel.text = repo.description ?? " "
             self.detailsButton.alpha = CGFloat(repo.detailsButtonAlpha)
+            
+            imageLoader.getProfileImage(for: repo.owner.avatar_url)
+            imageLoader.image.bind { [weak self] (image) in
+                guard let self = self, let image = image else { return }
+                self.profileImageView.image = image
+            }
         }
     }
     

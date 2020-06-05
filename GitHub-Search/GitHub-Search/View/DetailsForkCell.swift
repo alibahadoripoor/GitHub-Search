@@ -11,12 +11,18 @@ import UIKit
 class DetailsForkCell: BaseCell{
 
     weak var parentVC: DetailsTVC!
+    var imageLoader = ProfileImageLoaderVM()
     
     var forkUser: DetailsForkCellVM? {
         didSet{
             guard let forkUser = forkUser else { return }
             self.titleLabel.text = forkUser.userName
-            self.profileImageView.setImage(for: forkUser.userImageUrl)
+            
+            imageLoader.getProfileImage(for: forkUser.userImageUrl)
+            imageLoader.image.bind { [weak self] (image) in
+                guard let self = self, let image = image else { return }
+                self.profileImageView.image = image
+            }
         }
     }
     

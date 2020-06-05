@@ -12,24 +12,31 @@ import UIKit.UIImageView
 //Creating the cache object
 let imageCache = NSCache<NSString, UIImage>()
 
-extension UIImageView {
+class ProfileImageLoaderVM{
    
-    func setImage(for urlString: String){
+    private var service: RepositoriesServiceProtocol!
+    var image: Box<UIImage?> = Box(nil)
+    
+    init(service: RepositoriesServiceProtocol = RepositoriesService()) {
+        self.service = service
+    }
+    
+    func getProfileImage(for urlString: String){
         
-        image = nil
+        image.value = nil
         
         if let imageFromCache = imageCache.object(forKey: urlString as NSString) {
             //if the image already exist in the cache, set image from cache and return
-            self.image = imageFromCache
+            self.image.value = imageFromCache
             return
         }
         
-        RepositoriesService.getProfileImageData(for: urlString) { [weak self] (data, err) in
+        guard let service = service else { return }
+        service.getProfileImageData(for: urlString) { [weak self] (data, err) in
             guard let self = self, let data = data else { return }
             guard let image = UIImage(data: data) else { return }
             
-            self.image = image
-            self.setNeedsDisplay()
+            self.image.value = image
             
             //Save the imageUrl in the cache
             imageCache.setObject(image, forKey: urlString as NSString)

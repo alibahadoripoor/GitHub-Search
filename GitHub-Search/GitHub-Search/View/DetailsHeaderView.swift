@@ -11,13 +11,19 @@ import UIKit
 class DetailsHeaderView: BaseView {
     
     weak var paretVC: DetailsTVC!
+    var imageLoader = ProfileImageLoaderVM()
     
     var detailsHeader: DetailsHeaderVM?{
         didSet{
             guard let detailsHeader = detailsHeader else { return }
-            profileImageView.setImage(for: detailsHeader.imageURL)
             userNameButton.setTitle(detailsHeader.userName, for: .normal)
             repoNameLabel.text = detailsHeader.repoName
+            
+            imageLoader.getProfileImage(for: detailsHeader.imageURL)
+            imageLoader.image.bind { [weak self] (image) in
+                guard let self = self, let image = image else { return }
+                self.profileImageView.image = image
+            }
         }
     }
     

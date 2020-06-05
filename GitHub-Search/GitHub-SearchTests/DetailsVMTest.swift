@@ -13,9 +13,9 @@ class DetailsVMTest: XCTestCase {
     
     func testLoadRepositoriesForks() {
         let expectation = self.expectation(description: "Load Repository Forks")
-        let viewModel = DetailsVM()
+        let viewModel = DetailsVM(service: MockService())
         
-        viewModel.loadRepositoriesForks(for: "nextcloud", repoName: "ios", page: 1)
+        viewModel.loadRepositoriesForks(for: "", repoName: "", page: 1)
         
         viewModel.fetchedCells.bind { (cells) in
             if let cells = cells, cells.count > 0{
@@ -23,22 +23,7 @@ class DetailsVMTest: XCTestCase {
             }
         }
         
-        waitForExpectations(timeout: 8, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
-    
-    func testLastPageOfRepositoriesForksLoaded() {
-        let expectation = self.expectation(description: "Last Page of Repositories Forks is Loaded")
-        let viewModel = DetailsVM()
-        
-        viewModel.loadRepositoriesForks(for: "nextcloud", repoName: "ios", page: 14)
-        
-        viewModel.isLastPage.bind { (isLastPage) in
-            if let isLastPage = isLastPage, isLastPage {
-                expectation.fulfill()
-            }
-        }
-        
-        waitForExpectations(timeout: 8, handler: nil)
-    }
-    
+ 
 }
