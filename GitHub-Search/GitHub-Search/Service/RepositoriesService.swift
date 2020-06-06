@@ -16,22 +16,17 @@ enum HTTPError: Error {
     case invalidData
 }
 
-typealias fetchDataCompletion = (Data?, HTTPError?) -> ()
+
 typealias ObjectCompletion = (Object?, HTTPError?) -> ()
-typealias RepositoryForksCompletion = ([Repository]?, HTTPError?) -> ()
-typealias UserRepositoriesCompletion = ([Repository]?, HTTPError?) -> ()
-typealias ProfileImageCompletion = (Data?, HTTPError?) -> ()
+typealias ReposCompletion = ([Repository]?, HTTPError?) -> ()
 
 protocol RepositoriesServiceProtocol: class {
     func getRepositoriesObject(for page: Int, query: String, completion: @escaping ObjectCompletion)
-    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping RepositoryForksCompletion)
-    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping UserRepositoriesCompletion)
-    func getProfileImageData(for avatarURL: String, completion: @escaping ProfileImageCompletion)
+    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping ReposCompletion)
+    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping ReposCompletion)
 }
 
 class RepositoriesService: RepositoriesServiceProtocol {
-    
-    private let session: URLSession = .shared
     
     private var urlBuilder: URLComponents = {
         var urlBuilder = URLComponents()
@@ -50,7 +45,7 @@ class RepositoriesService: RepositoriesServiceProtocol {
         
         let url = urlBuilder.url!
    
-        fetchData(for: url) { (data, err) in
+        DataService.fetchData(for: url) { (data, err) in
             
             guard err == nil else{
                 completion(nil, err)
@@ -72,7 +67,7 @@ class RepositoriesService: RepositoriesServiceProtocol {
 
     }
 
-    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping RepositoryForksCompletion){
+    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping ReposCompletion){
         
         urlBuilder.path = "/repos/\(ownerName)/\(repoName)/forks"
         urlBuilder.queryItems = [
@@ -81,7 +76,7 @@ class RepositoriesService: RepositoriesServiceProtocol {
         
         let url = urlBuilder.url!
         
-        fetchData(for: url) { (data, err) in
+        DataService.fetchData(for: url) { (data, err) in
             
             guard err == nil else{
                 completion(nil, err)
@@ -103,7 +98,7 @@ class RepositoriesService: RepositoriesServiceProtocol {
         
     }
    
-    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping UserRepositoriesCompletion){
+    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping ReposCompletion){
         
         urlBuilder.path = "/users/\(ownerName)/repos"
         urlBuilder.queryItems = [
@@ -112,7 +107,7 @@ class RepositoriesService: RepositoriesServiceProtocol {
         
         let url = urlBuilder.url!
         
-        fetchData(for: url) { (data, err) in
+        DataService.fetchData(for: url) { (data, err) in
             
             guard err == nil else{
                 completion(nil, err)
@@ -132,61 +127,6 @@ class RepositoriesService: RepositoriesServiceProtocol {
             
         }
         
-    }
-    
-    func getProfileImageData(for avatarURL: String, completion: @escaping (Data?, HTTPError?) -> ()){
-        
-        guard let url = URL(string: avatarURL) else { return }
-        
-        fetchData(for: url) { (data, err) in
-            
-            guard err == nil else{
-                completion(nil, err)
-                return
-            }
-            
-            guard let data = data else { return }
-            completion(data, nil)
-        }
-        
-    }
-    
-    private func fetchData(for url: URL, completion: @escaping (Data?, HTTPError?) -> ()){
-        let task = session.dataTask(with: url) { (data, response, error) in
-                    
-            DispatchQueue.main.async {
-                
-                guard error == nil else {
-                    print("The request is failed: \(error!.localizedDescription)")
-                    completion(nil, .failedRequest)
-                    return
-                }
-                
-                guard let response = response as? HTTPURLResponse else {
-                    print("Unable to process GitHub response")
-                    completion(nil, .invalidResponse)
-                    return
-                }
-                
-                guard response.statusCode == 200 else {
-                    print("Failure response from GitHub: \(response.statusCode)")
-                    completion(nil, .failedRequest)
-                    return
-                }
-                
-                guard let data = data else {
-                    print("No data returned from GitHub")
-                    completion(nil, .noData)
-                    return
-                }
-                
-                completion(data, nil)
-                
-            }
-            
-        }
-        
-        task.resume()
     }
     
 }

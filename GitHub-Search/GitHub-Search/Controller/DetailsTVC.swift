@@ -112,7 +112,6 @@ extension DetailsTVC{
     
     private func setupNavigation(){
         
-        title = "Details"
         navigationController?.navigationBar.tintColor = .customYellow
         navigationController?.navigationBar.barTintColor = .customDarkBlue
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.customYellow]
@@ -121,6 +120,12 @@ extension DetailsTVC{
         
         let homeBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "Home"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
         navigationItem.rightBarButtonItem = homeBarButtonItem
+        
+        if navigationController?.viewControllers.count == 2 {
+            title = "Details"
+        }else{
+            title = detailsHeader?.repoName
+        }
         
     }
     

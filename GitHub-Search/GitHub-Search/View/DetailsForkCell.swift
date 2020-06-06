@@ -20,8 +20,9 @@ class DetailsForkCell: BaseCell{
             
             imageLoader.getProfileImage(for: forkUser.userImageUrl)
             imageLoader.image.bind { [weak self] (image) in
-                guard let self = self, let image = image else { return }
+                guard let self = self else { return }
                 self.profileImageView.image = image
+                self.setNeedsDisplay()
             }
         }
     }

@@ -107,9 +107,6 @@ class SearchResultTVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: searchCellId, for: indexPath) as! SearchResultCell
         cell.repo = cells[indexPath.item]
         cell.parentVC = self
-        if let count = navigationController?.viewControllers.count, count > 1{
-            cell.isUserRepoCell = true
-        }
         return cell
     }
     
@@ -160,7 +157,7 @@ extension SearchResultTVC{
     
     private func setupNavigation(){
         
-        title = "Search Results"
+        
         navigationController?.navigationBar.tintColor = .customYellow
         navigationController?.navigationBar.barTintColor = .customDarkBlue
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.customYellow]
@@ -168,9 +165,11 @@ extension SearchResultTVC{
         navigationController?.navigationBar.barStyle = .black
         
         if navigationController?.viewControllers.count == 1 {
+            title = "Search Results"
             let searchBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "search"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
             navigationItem.rightBarButtonItem = searchBarButtonItem
         }else{
+            title = searchUserName
             let homeBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "Home"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
             navigationItem.rightBarButtonItem = homeBarButtonItem
         }

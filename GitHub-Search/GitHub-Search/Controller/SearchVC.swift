@@ -135,7 +135,7 @@ extension SearchVC{
     }
     
     @objc private func searchButtonClicked(){
-        searchResultTVC.searchQuery = searchBarText
+        self.searchResultTVC.searchQuery = self.searchBarText
         self.dismiss(animated: true, completion: nil)
     }
     

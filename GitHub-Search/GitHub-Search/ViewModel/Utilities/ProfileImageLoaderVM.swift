@@ -14,10 +14,10 @@ let imageCache = NSCache<NSString, UIImage>()
 
 class ProfileImageLoaderVM{
    
-    private var service: RepositoriesServiceProtocol!
+    private var service: ProfileImageServiceProtocol!
     var image: Box<UIImage?> = Box(nil)
     
-    init(service: RepositoriesServiceProtocol = RepositoriesService()) {
+    init(service: ProfileImageServiceProtocol = ProfileImageService()) {
         self.service = service
     }
     

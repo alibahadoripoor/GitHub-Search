@@ -25,18 +25,9 @@ class SearchResultCell: BaseCell{
             
             imageLoader.getProfileImage(for: repo.owner.avatar_url)
             imageLoader.image.bind { [weak self] (image) in
-                guard let self = self, let image = image else { return }
+                guard let self = self else { return }
                 self.profileImageView.image = image
-            }
-        }
-    }
-    
-    var isUserRepoCell: Bool = false{
-        didSet{
-            if isUserRepoCell {
-                self.detailsButton.alpha = 0
-            }else{
-                self.detailsButton.alpha = 1
+                self.setNeedsDisplay()
             }
         }
     }

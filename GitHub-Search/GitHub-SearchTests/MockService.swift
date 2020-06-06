@@ -25,11 +25,12 @@ class MockService: RepositoriesServiceProtocol {
                 completion(object, nil)
             }catch{
                 print("the data can not decode")
+                completion(nil, .invalidData)
             }
         })
     }
     
-    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping RepositoryForksCompletion) {
+    func getRepositoryForks(for ownerName: String, repoName: String, page: Int, completion: @escaping ReposCompletion) {
         fetchRepositoriesData(completion: { (data,err)  in
             if let err = err {
                 completion(nil, err)
@@ -43,11 +44,12 @@ class MockService: RepositoriesServiceProtocol {
                 completion(repos, nil)
             }catch{
                 print("the data can not decode")
+                completion(nil, .invalidData)
             }
         })
     }
     
-    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping UserRepositoriesCompletion) {
+    func getUserRepositories(for ownerName: String, page: Int, completion: @escaping ReposCompletion) {
         fetchRepositoriesData(completion: { (data,err)  in
             if let err = err {
                 completion(nil, err)
@@ -61,12 +63,9 @@ class MockService: RepositoriesServiceProtocol {
                 completion(repos, nil)
             }catch{
                 print("the data can not decode")
+                completion(nil, .invalidData)
             }
         })
-    }
-    
-    func getProfileImageData(for avatarURL: String, completion: @escaping ProfileImageCompletion) {
-        
     }
     
     private func fetchObjectData(completion: @escaping fetchDataCompletion){

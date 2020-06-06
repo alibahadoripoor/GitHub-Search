@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		DB199CD32485AB5C003B726B /* UIViewExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB199CD22485AB5C003B726B /* UIViewExtentions.swift */; };
+		DB3270DF248BAEEA00D5923A /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3270DE248BAEEA00D5923A /* DataService.swift */; };
+		DB3270E1248BAF1300D5923A /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3270E0248BAF1300D5923A /* ProfileImageService.swift */; };
+		DB3270E3248BB47B00D5923A /* DataServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3270E2248BB47B00D5923A /* DataServiceTest.swift */; };
 		DB57C2B3248AEC6600E1D1E2 /* MockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB57C2B2248AEC6600E1D1E2 /* MockService.swift */; };
 		DB57C2B5248AEFFD00E1D1E2 /* Repositories.json in Resources */ = {isa = PBXBuildFile; fileRef = DB57C2B4248AEFFD00E1D1E2 /* Repositories.json */; };
 		DB5833B5248531CA009F750C /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5833B4248531CA009F750C /* BaseView.swift */; };
@@ -58,6 +61,9 @@
 
 /* Begin PBXFileReference section */
 		DB199CD22485AB5C003B726B /* UIViewExtentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtentions.swift; sourceTree = "<group>"; };
+		DB3270DE248BAEEA00D5923A /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		DB3270E0248BAF1300D5923A /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
+		DB3270E2248BB47B00D5923A /* DataServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataServiceTest.swift; sourceTree = "<group>"; };
 		DB57C2B2248AEC6600E1D1E2 /* MockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockService.swift; sourceTree = "<group>"; };
 		DB57C2B4248AEFFD00E1D1E2 /* Repositories.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Repositories.json; sourceTree = "<group>"; };
 		DB5833B4248531CA009F750C /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
@@ -127,6 +133,28 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		DB3270E4248BB48600D5923A /* ViewModelLayerTest */ = {
+			isa = PBXGroup;
+			children = (
+				DBE1EDC32486BD1D008C0DA5 /* SearchResultVMTest.swift */,
+				DBE1EDB924867014008C0DA5 /* SearchResultHeaderVMTest.swift */,
+				DBE1EDBB2486704A008C0DA5 /* SearchResultCellVMTest.swift */,
+				DBE1EDC12486B289008C0DA5 /* DetailsVMTest.swift */,
+				DBE1EDBD2486772A008C0DA5 /* DetailsHeaderVMTest.swift */,
+				DBE1EDBF24867748008C0DA5 /* DetailsForkCellVMTest.swift */,
+			);
+			path = ViewModelLayerTest;
+			sourceTree = "<group>";
+		};
+		DB3270E5248BB4B300D5923A /* ModelLayerTest */ = {
+			isa = PBXGroup;
+			children = (
+				DB3270E2248BB47B00D5923A /* DataServiceTest.swift */,
+				DBE1EDC52486CFBC008C0DA5 /* ModelTest.swift */,
+			);
+			path = ModelLayerTest;
+			sourceTree = "<group>";
+		};
 		DB5833CC24858EEE009F750C /* SearchVMs */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,13 +215,8 @@
 		DB7A51EE247FBC540045946D /* GitHub-SearchTests */ = {
 			isa = PBXGroup;
 			children = (
-				DBE1EDC32486BD1D008C0DA5 /* SearchResultVMTest.swift */,
-				DBE1EDB924867014008C0DA5 /* SearchResultHeaderVMTest.swift */,
-				DBE1EDBB2486704A008C0DA5 /* SearchResultCellVMTest.swift */,
-				DBE1EDC12486B289008C0DA5 /* DetailsVMTest.swift */,
-				DBE1EDBD2486772A008C0DA5 /* DetailsHeaderVMTest.swift */,
-				DBE1EDBF24867748008C0DA5 /* DetailsForkCellVMTest.swift */,
-				DBE1EDC52486CFBC008C0DA5 /* ModelTest.swift */,
+				DB3270E5248BB4B300D5923A /* ModelLayerTest */,
+				DB3270E4248BB48600D5923A /* ViewModelLayerTest */,
 				DB57C2B2248AEC6600E1D1E2 /* MockService.swift */,
 				DB57C2B4248AEFFD00E1D1E2 /* Repositories.json */,
 				DBE1EDC72486D12F008C0DA5 /* Object.json */,
@@ -213,7 +236,9 @@
 		DB7A51FD247FC1AF0045946D /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				DB3270DE248BAEEA00D5923A /* DataService.swift */,
 				DB7A51FE247FC2160045946D /* RepositoriesService.swift */,
+				DB3270E0248BAF1300D5923A /* ProfileImageService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -384,6 +409,7 @@
 				DB93CC522483A0700083C557 /* SearchResultCell.swift in Sources */,
 				DBE43A642482640600E9A864 /* DetailsTVC.swift in Sources */,
 				DB7A51D9247FBC500045946D /* AppDelegate.swift in Sources */,
+				DB3270DF248BAEEA00D5923A /* DataService.swift in Sources */,
 				DB5833B924853279009F750C /* DetailsHeaderView.swift in Sources */,
 				DBE43A6C24829EA500E9A864 /* UIColorExtension.swift in Sources */,
 				DBE43A602481CA8000E9A864 /* SearchVC.swift in Sources */,
@@ -404,6 +430,7 @@
 				DB5833B5248531CA009F750C /* BaseView.swift in Sources */,
 				DB5833C924858E0F009F750C /* SearchResultHeaderVM.swift in Sources */,
 				DB848DE12483D56B00E124B3 /* ProfileImageLoaderVM.swift in Sources */,
+				DB3270E1248BAF1300D5923A /* ProfileImageService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +444,7 @@
 				DBE1EDC024867748008C0DA5 /* DetailsForkCellVMTest.swift in Sources */,
 				DBE1EDC62486CFBC008C0DA5 /* ModelTest.swift in Sources */,
 				DBE1EDBE2486772A008C0DA5 /* DetailsHeaderVMTest.swift in Sources */,
+				DB3270E3248BB47B00D5923A /* DataServiceTest.swift in Sources */,
 				DBE1EDC42486BD1D008C0DA5 /* SearchResultVMTest.swift in Sources */,
 				DB57C2B3248AEC6600E1D1E2 /* MockService.swift in Sources */,
 			);
