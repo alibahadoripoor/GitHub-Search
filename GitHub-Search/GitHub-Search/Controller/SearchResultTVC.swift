@@ -13,8 +13,8 @@ private let searchCellId = "searchCellId"
 class SearchResultTVC: UITableViewController {
 
     private var topIndicator = UIRefreshControl()
-    private var centerIndicator = UIActivityIndicatorView(style: .medium)
-    private var bottomIndicator = UIActivityIndicatorView(style: .medium)
+    private var centerIndicator = UIActivityIndicatorView(style: .white)
+    private var bottomIndicator = UIActivityIndicatorView(style: .white)
     private let backImageView = UIImageView(image: #imageLiteral(resourceName: "Github-back"))
     private let viewModel = SearchResultVM()
     private let header = SearchResultHeaderView()
@@ -26,7 +26,9 @@ class SearchResultTVC: UITableViewController {
     var searchQuery: String?{
         didSet{
             self.backImageView.alpha = 0
-            centerIndicator.startAnimating()
+            if #available(iOS 13.0, *) {
+                centerIndicator.startAnimating()
+            }
             reloadResults()
         }
     }
@@ -34,7 +36,9 @@ class SearchResultTVC: UITableViewController {
     var searchUserName: String?{
         didSet{
             self.backImageView.alpha = 0
-            centerIndicator.startAnimating()
+            if #available(iOS 13.0, *) {
+                centerIndicator.startAnimating()
+            }
             reloadResults()
         }
     }
@@ -156,14 +160,7 @@ extension SearchResultTVC{
     }
     
     private func setupNavigation(){
-        
-        
-        navigationController?.navigationBar.tintColor = .customYellow
-        navigationController?.navigationBar.barTintColor = .customDarkBlue
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.customYellow]
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.customYellow]
-        navigationController?.navigationBar.barStyle = .black
-        
+
         if navigationController?.viewControllers.count == 1 {
             title = "Search Results"
             let searchBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "search"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
@@ -185,11 +182,9 @@ extension SearchResultTVC{
         guard let navHeight = navigationController?.navigationBar.frame.height else { return }
         centerIndicator.frame = CGRect(x: 0, y: -navHeight, width: view.frame.width, height: view.frame.height)
         centerIndicator.hidesWhenStopped = true
-        centerIndicator.color = .white
         
         bottomIndicator.startAnimating()
         bottomIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
-        bottomIndicator.color = .white
         tableView.tableFooterView = bottomIndicator
         tableView.tableFooterView?.isHidden = true
     }

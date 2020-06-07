@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -17,6 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        UINavigationBar.appearance().barTintColor = .customDarkBlue
+        UINavigationBar.appearance().tintColor = .customYellow
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.customYellow]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.customYellow]
+        UINavigationBar.appearance().barStyle = .black
+        UINavigationBar.appearance().shadowImage = UIImage()
         
         let navigationController = UINavigationController(rootViewController: SearchResultTVC())
         navigationController.navigationBar.prefersLargeTitles = true

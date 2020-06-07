@@ -6,7 +6,7 @@
 //  Copyright © 2020 Ali Bahadori. All rights reserved.
 //
 
-import UIKit
+import UIKit.UIView
 
 extension UIView {
     func pinToSuperview(_ view: UIView){

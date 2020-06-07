@@ -22,6 +22,7 @@
 		DB5833C724857B28009F750C /* DetailsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5833C324857B28009F750C /* DetailsVM.swift */; };
 		DB5833C924858E0F009F750C /* SearchResultHeaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5833C824858E0F009F750C /* SearchResultHeaderVM.swift */; };
 		DB5833CB24858E29009F750C /* DetailsHeaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5833CA24858E29009F750C /* DetailsHeaderVM.swift */; };
+		DB7193F0248D0715003BF8AC /* UISearchBarExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7193EF248D0715003BF8AC /* UISearchBarExtensions.swift */; };
 		DB7A51D9247FBC500045946D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7A51D8247FBC500045946D /* AppDelegate.swift */; };
 		DB7A51DB247FBC500045946D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7A51DA247FBC500045946D /* SceneDelegate.swift */; };
 		DB7A51E2247FBC540045946D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB7A51E1247FBC540045946D /* Assets.xcassets */; };
@@ -75,6 +76,7 @@
 		DB5833C324857B28009F750C /* DetailsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsVM.swift; sourceTree = "<group>"; };
 		DB5833C824858E0F009F750C /* SearchResultHeaderVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultHeaderVM.swift; sourceTree = "<group>"; };
 		DB5833CA24858E29009F750C /* DetailsHeaderVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsHeaderVM.swift; sourceTree = "<group>"; };
+		DB7193EF248D0715003BF8AC /* UISearchBarExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISearchBarExtensions.swift; sourceTree = "<group>"; };
 		DB7A51D5247FBC500045946D /* GitHub-Search.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GitHub-Search.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB7A51D8247FBC500045946D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DB7A51DA247FBC500045946D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				DBEF32C22485D1390029B849 /* UIViewControllerExtensions.swift */,
+				DB7193EF248D0715003BF8AC /* UISearchBarExtensions.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -415,6 +418,7 @@
 				DBE43A602481CA8000E9A864 /* SearchVC.swift in Sources */,
 				DBE43A62248263E800E9A864 /* SearchResultTVC.swift in Sources */,
 				DB5833C524857B28009F750C /* SearchResultCellVM.swift in Sources */,
+				DB7193F0248D0715003BF8AC /* UISearchBarExtensions.swift in Sources */,
 				DB5833B724853260009F750C /* SearchResultHeaderView.swift in Sources */,
 				DB5833CB24858E29009F750C /* DetailsHeaderVM.swift in Sources */,
 				DB5833C724857B28009F750C /* DetailsVM.swift in Sources */,
@@ -522,7 +526,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -576,7 +580,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -630,7 +634,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KXC6JA77B8;
 				INFOPLIST_FILE = "GitHub-SearchTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -652,7 +656,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KXC6JA77B8;
 				INFOPLIST_FILE = "GitHub-SearchTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -89,6 +89,6 @@ class DetailsHeaderView: BaseView {
     }
     
     @objc private func userNameButtonButtonClicked(){
-        paretVC.showSearchResultTVC(detailsHeader: detailsHeader, forkUser: nil)
+        paretVC.showSearchResultTVC(detailsHeader: detailsHeader, forkUser: nil, indexPath: nil)
     }
 }

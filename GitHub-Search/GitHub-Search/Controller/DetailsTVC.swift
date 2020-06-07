@@ -13,8 +13,8 @@ private let forksCellId = "forksCellId"
 class DetailsTVC: UITableViewController {
 
     private var topIndicator = UIRefreshControl()
-    private var centerIndicator = UIActivityIndicatorView(style: .medium)
-    private var bottomIndicator = UIActivityIndicatorView(style: .medium)
+    private var centerIndicator = UIActivityIndicatorView(style: .white)
+    private var bottomIndicator = UIActivityIndicatorView(style: .white)
     private let viewModel = DetailsVM()
     private let header = DetailsHeaderView()
     private var cells: [DetailsForkCellVM] = []
@@ -25,7 +25,9 @@ class DetailsTVC: UITableViewController {
     var detailsHeader: DetailsHeaderVM? {
         didSet{
             guard let detailsHeader = detailsHeader else { return }
-            centerIndicator.startAnimating()
+            if #available(iOS 13.0, *) {
+                centerIndicator.startAnimating()
+            }
             header.detailsHeader = detailsHeader
             reloadDetails()
         }
@@ -74,6 +76,7 @@ class DetailsTVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: forksCellId, for: indexPath) as! DetailsForkCell
         cell.forkUser = cells[indexPath.item]
         cell.parentVC = self
+        cell.indexPath = indexPath
         return cell
     }
     
@@ -112,12 +115,6 @@ extension DetailsTVC{
     
     private func setupNavigation(){
         
-        navigationController?.navigationBar.tintColor = .customYellow
-        navigationController?.navigationBar.barTintColor = .customDarkBlue
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.customYellow]
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.customYellow]
-        navigationController?.navigationBar.barStyle = .black
-        
         let homeBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "Home"), style: .plain, target: self, action: #selector(leftBarButtonClicked))
         navigationItem.rightBarButtonItem = homeBarButtonItem
         
@@ -138,11 +135,9 @@ extension DetailsTVC{
         guard let navHeight = navigationController?.navigationBar.frame.height else { return }
         centerIndicator.frame = CGRect(x: 0, y: -navHeight, width: view.frame.width, height: view.frame.height)
         centerIndicator.hidesWhenStopped = true
-        centerIndicator.color = .white
         
         bottomIndicator.startAnimating()
         bottomIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
-        bottomIndicator.color = .white
         tableView.tableFooterView = bottomIndicator
         tableView.tableFooterView?.isHidden = true
     }
@@ -159,14 +154,19 @@ extension DetailsTVC{
         navigationController?.popToViewController(homeVC, animated: true)
     }
     
-    func showSearchResultTVC(detailsHeader: DetailsHeaderVM?, forkUser: DetailsForkCellVM?){
+    func showSearchResultTVC(detailsHeader: DetailsHeaderVM?, forkUser: DetailsForkCellVM?, indexPath: IndexPath?){
         let searchResultTVC = SearchResultTVC()
         
         if let detailsHeader = detailsHeader{
             searchResultTVC.searchUserName = detailsHeader.userName
         }
+        
         if let forkUser = forkUser{
             searchResultTVC.searchUserName = forkUser.userName
+        }
+        
+        if let indexPath = indexPath{
+            tableView.deselectRow(at: indexPath, animated: false)
         }
         
         navigationController?.pushViewController(searchResultTVC, animated: true)

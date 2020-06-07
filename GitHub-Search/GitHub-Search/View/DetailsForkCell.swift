@@ -11,6 +11,8 @@ import UIKit
 class DetailsForkCell: BaseCell{
 
     weak var parentVC: DetailsTVC!
+    var indexPath: IndexPath!
+    
     var imageLoader = ProfileImageLoaderVM()
     
     var forkUser: DetailsForkCellVM? {
@@ -111,7 +113,7 @@ class DetailsForkCell: BaseCell{
         super.setSelected(selected, animated: animated)
         if selected {
             guard let forkUser = forkUser else { return }
-            parentVC.showSearchResultTVC(detailsHeader: nil, forkUser: forkUser)
+            parentVC.showSearchResultTVC(detailsHeader: nil, forkUser: forkUser, indexPath: indexPath)
         }
     }
     

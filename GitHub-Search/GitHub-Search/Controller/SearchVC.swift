@@ -97,12 +97,12 @@ extension SearchVC{
         searchView.keyboardAppearance = .dark
         searchView.layer.borderColor = UIColor.customYellow.cgColor
         searchView.barTintColor = .customDarkBlue
-        searchView.tintColor = .customYellow
-        searchView.searchTextField.leftView?.tintColor = .customYellow
-        searchView.searchTextField.textColor = .white
+        searchView.tintColor = UIColor.customYellow
+        searchView.textField.leftView?.tintColor = .customYellow
+        searchView.textField.textColor = .white
+        searchView.textField.backgroundColor = .clear
         searchView.layer.borderWidth = 3
         searchView.layer.cornerRadius = 5
-        searchView.setSearchFieldBackgroundImage(UIImage(), for: .normal)
         searchView.placeholder = "Search Repository"
         searchView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -135,12 +135,14 @@ extension SearchVC{
     }
     
     @objc private func searchButtonClicked(){
-        self.searchResultTVC.searchQuery = self.searchBarText
-        self.dismiss(animated: true, completion: nil)
+        searchView.resignFirstResponder()
+        searchResultTVC.searchQuery = self.searchBarText
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func cancelButtonClicked(){
-        self.dismiss(animated: true, completion: nil)
+        searchView.resignFirstResponder()
+        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -152,3 +154,5 @@ extension SearchVC: UISearchBarDelegate{
         searchButtonClicked()
     }
 }
+
+
