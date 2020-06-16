@@ -13,7 +13,7 @@ typealias fetchDataCompletion = (Data?, HTTPError?) -> ()
 class DataService{
     
     private static let session: URLSession = .shared
-    
+   
     static func fetchData(for url: URL, completion: @escaping (Data?, HTTPError?) -> ()){
         let task = session.dataTask(with: url) { (data, response, error) in
                     

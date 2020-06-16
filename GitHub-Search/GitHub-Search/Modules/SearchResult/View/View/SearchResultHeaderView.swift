@@ -10,12 +10,12 @@ import UIKit
 
 class SearchResultHeaderView: BaseView {
     
-    var searchResultHeader: SearchResultHeaderVM?{
-        didSet{
-            guard let searchResultHeader = searchResultHeader else { return }
-            self.label.text = searchResultHeader.headerText
-        }
-    }
+//    var searchResultHeader: SearchResultHeaderVM?{
+//        didSet{
+//            guard let searchResultHeader = searchResultHeader else { return }
+//            self.label.text = searchResultHeader.headerText
+//        }
+//    }
     
     let label = UILabel()
     
@@ -39,4 +39,13 @@ class SearchResultHeaderView: BaseView {
             label.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ])
     }
+    
+    func setupTextLabel(for searchQuery: String, totalCount: Int){
+        self.label.text = "\(totalCount) items for: \(searchQuery)"
+    }
+    
+    func setupTextLabel(userName: String){
+        self.label.text = "\(userName) Repositories"
+    }
+    
 }

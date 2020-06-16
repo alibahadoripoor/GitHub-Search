@@ -8,14 +8,14 @@
 
 import UIKit
 
-class SearchVC: UIViewController {
+class SearchVC: UIViewController, SearchView {
 
-    weak var searchResultTVC: SearchResultTVC!
+    var presenter: SearchPresentation!
     
     private let topView = UIView()
     private let cancelButton = UIButton(type: .system)
     private let githubImageView = UIImageView()
-    private let searchView = UISearchBar()
+    private let searchBar = UISearchBar()
     private let searchButton = UIButton(type: .system)
     private var searchBarText = ""
     
@@ -32,7 +32,7 @@ class SearchVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        searchView.becomeFirstResponder()
+        searchBar.becomeFirstResponder()
     }
     
     deinit{
@@ -91,26 +91,26 @@ extension SearchVC{
     }
     
     private func setupSearchView(){
-        view.addSubview(searchView)
+        view.addSubview(searchBar)
         
-        searchView.delegate = self
-        searchView.keyboardAppearance = .dark
-        searchView.layer.borderColor = UIColor.customYellow.cgColor
-        searchView.barTintColor = .customDarkBlue
-        searchView.tintColor = UIColor.customYellow
-        searchView.textField.leftView?.tintColor = .customYellow
-        searchView.textField.textColor = .white
-        searchView.textField.backgroundColor = .clear
-        searchView.layer.borderWidth = 3
-        searchView.layer.cornerRadius = 5
-        searchView.placeholder = "Search Repository"
-        searchView.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.delegate = self
+        searchBar.keyboardAppearance = .dark
+        searchBar.layer.borderColor = UIColor.customYellow.cgColor
+        searchBar.barTintColor = .customDarkBlue
+        searchBar.tintColor = UIColor.customYellow
+        searchBar.textField.leftView?.tintColor = .customYellow
+        searchBar.textField.textColor = .white
+        searchBar.textField.backgroundColor = .clear
+        searchBar.layer.borderWidth = 3
+        searchBar.layer.cornerRadius = 5
+        searchBar.placeholder = "Search Repository"
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            searchView.topAnchor.constraint(equalTo: topView.bottomAnchor),
-            searchView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            searchView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            searchView.heightAnchor.constraint(equalToConstant: 50)
+            searchBar.topAnchor.constraint(equalTo: topView.bottomAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            searchBar.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -126,7 +126,7 @@ extension SearchVC{
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            searchButton.topAnchor.constraint(equalTo: searchView.bottomAnchor, constant: 10),
+            searchButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
             searchButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             searchButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
@@ -135,14 +135,13 @@ extension SearchVC{
     }
     
     @objc private func searchButtonClicked(){
-        searchView.resignFirstResponder()
-        searchResultTVC.searchQuery = self.searchBarText
-        dismiss(animated: true, completion: nil)
+        searchBar.resignFirstResponder()
+        presenter.searchButtonClicked(with: searchBarText)
     }
     
     @objc private func cancelButtonClicked(){
-        searchView.resignFirstResponder()
-        dismiss(animated: true, completion: nil)
+        searchBar.resignFirstResponder()
+        presenter.cancelButtonClicked()
     }
 }
 

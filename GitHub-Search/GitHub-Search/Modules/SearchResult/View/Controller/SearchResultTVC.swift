@@ -12,88 +12,62 @@ private let searchCellId = "searchCellId"
 
 class SearchResultTVC: UITableViewController {
 
+    var presenter: SearchResultPresentation!
+    var nextPage = 1
+    var isLastPage = false
+    
     private var topIndicator = UIRefreshControl()
     private var centerIndicator = UIActivityIndicatorView(style: .white)
     private var bottomIndicator = UIActivityIndicatorView(style: .white)
     private let backImageView = UIImageView(image: #imageLiteral(resourceName: "Github-back"))
-    private let viewModel = SearchResultVM()
+    
     private let header = SearchResultHeaderView()
-    private var cells: [SearchResultCellVM] = []
-    private var isRefreshing = false
-    private var isLastPage = false
-    private var nextPage = 1
+    private var cells: [Repository] = []
+    private var isFirstLoad = true
     
     var searchQuery: String?{
         didSet{
-            self.backImageView.alpha = 0
-            if #available(iOS 13.0, *) {
-                centerIndicator.startAnimating()
-            }
-            reloadResults()
+            guard let searchQuery = searchQuery else { return }
+            backImageView.alpha = 0
+            centerIndicator.startAnimating()
+            presenter.searchQueryDidSet(query: searchQuery)
         }
     }
     
     var searchUserName: String?{
         didSet{
-            self.backImageView.alpha = 0
-            if #available(iOS 13.0, *) {
-                centerIndicator.startAnimating()
-            }
-            reloadResults()
+            guard let searchUserName = searchUserName else { return }
+            backImageView.alpha = 0
+            centerIndicator.startAnimating()
+            presenter.searchUserNameDidSet(ownerName: searchUserName)
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupTableView()
         setupNavigation()
         setupIndicators()
-        
-        viewModel.fetchedHeader.bind { [weak self] (searchResultHeader) in
-            guard let self = self, let searchResultHeader = searchResultHeader else { return }
-            self.header.searchResultHeader = searchResultHeader
-        }
-        
-        viewModel.fetchedCells.bind { [weak self] (cells) in
-            guard let self = self, let cells = cells else { return }
-            if self.isRefreshing{
-                self.cells = []
-                self.isRefreshing = false
-            }
-            self.cells += cells
-            self.nextPage += 1
-            self.tableView.tableFooterView?.isHidden = true
-            self.tableView.reloadData()
-            self.centerIndicator.stopAnimating()
-            self.topIndicator.endRefreshing()
-            if self.cells.isEmpty{
-                self.backImageView.alpha = 1
-            }
-        }
-        
-        viewModel.fetchedDetails.bind { [weak self] (detailsHeader) in
-            guard let self = self, let detailsHeader = detailsHeader else { return }
-            let detailsTVC = DetailsTVC(style: .grouped)
-            detailsTVC.detailsHeader = detailsHeader
-            self.navigationController?.pushViewController(detailsTVC, animated: true)
-        }
-        
-        viewModel.isLastPage.bind { [weak self] (isLastPage) in
-            guard let self = self, let isLastPage = isLastPage else { return }
-            self.isLastPage = isLastPage
-        }
-        
+
+//        viewModel.fetchedDetails.bind { [weak self] (detailsHeader) in
+//            guard let self = self, let detailsHeader = detailsHeader else { return }
+//            let detailsTVC = DetailsTVC(style: .grouped)
+//            detailsTVC.detailsHeader = detailsHeader
+//            self.navigationController?.pushViewController(detailsTVC, animated: true)
+//        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if navigationController?.viewControllers.count == 1 {
-            if searchQuery == nil, searchUserName == nil {
-                showSearchVC()
+            if isFirstLoad {
+                presenter.searchButtonClicked()
+                isFirstLoad = false
             }
         }
+        
     }
     
     deinit{
@@ -102,11 +76,19 @@ class SearchResultTVC: UITableViewController {
     
     // MARK: - Table view data source
 
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return header
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cells.count
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: searchCellId, for: indexPath) as! SearchResultCell
         cell.repo = cells[indexPath.item]
@@ -120,28 +102,53 @@ class SearchResultTVC: UITableViewController {
         
         if indexPath.item == lastItemIndex && !isLastPage{
             self.tableView.tableFooterView?.isHidden = false
-
+            
             if let searchQuery = searchQuery{
                 // request for searched repositories, SearcVC is ParentVC
-                viewModel.loadRepositories(for: searchQuery, page: nextPage)
+                presenter.nextPageForQuerySearchResult(page: nextPage, query: searchQuery)
             }
             
             if let searchUserName = searchUserName{
                 // request for user repositories, DetailsTVC is ParentVC
-                viewModel.loadUserRepositories(for: searchUserName, page: nextPage)
+                presenter.nextPageForUserRepos(page: nextPage, ownerName: searchUserName)
             }
         }
         
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return header
+}
+
+extension SearchResultTVC: SearchResultView{
+    func showSearchResults(object: Object) {
+        header.setupTextLabel(for: searchQuery!, totalCount: object.total_count)
+        cells = object.items
+        tableView.reloadData()
     }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+    func showUserRepos(repos: [Repository]) {
+        header.setupTextLabel(userName: searchUserName!)
+        cells = repos
+        tableView.reloadData()
     }
-
+    
+    func showNextPage(repos: [Repository]) {
+        cells += repos
+        tableView.reloadData()
+    }
+    
+    func stopIndicators() {
+        centerIndicator.stopAnimating()
+        topIndicator.endRefreshing()
+        tableView.tableFooterView?.isHidden = true
+    }
+    
+    func showBackgroundImage(){
+        backImageView.alpha = 1
+    }
+    
+    func showErrorAlert(error: HTTPError) {
+        //Here we can Handel the errors
+    }
 }
 
 extension SearchResultTVC{
@@ -191,36 +198,26 @@ extension SearchResultTVC{
     
     @objc private func leftBarButtonClicked(){
         if navigationController?.viewControllers.count == 1 {
-            showSearchVC()
+            presenter.searchButtonClicked()
         }else{
-            guard let homeVC = navigationController?.viewControllers[0] else { return }
-            navigationController?.popToViewController(homeVC, animated: true)
+            presenter.homeButtonClicked()
         }
     }
     
     @objc dynamic private func reloadResults(){
         if let searchQuery = searchQuery{
             // reload searched repositories, SearcVC is ParentVC
-            nextPage = 1
-            isRefreshing = true
-            viewModel.loadRepositories(for: searchQuery, page: nextPage)
+            presenter.nextPageForQuerySearchResult(page: 1, query: searchQuery)
         }
         
         if let searchUserName = searchUserName{
             // reload user repositories, DetailsTVC is ParentVC
-            nextPage = 1
-            isRefreshing = true
-            viewModel.loadUserRepositories(for: searchUserName, page: nextPage)
+            presenter.nextPageForUserRepos(page: 1, ownerName: searchUserName)
         }
     }
     
     func showDetailsTVC(for repo: SearchResultCellVM){
-        viewModel.fetchDetails(for: repo)
+//        viewModel.fetchDetails(for: repo)
     }
     
-    private func showSearchVC(){
-        let searchVC = SearchVC()
-        searchVC.searchResultTVC = self
-        present(searchVC, animated: true)
-    }
 }

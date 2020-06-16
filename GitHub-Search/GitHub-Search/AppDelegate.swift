@@ -17,20 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         guard #available(iOS 13.0, *) else{
-            UINavigationBar.appearance().barTintColor = .customDarkBlue
-            UINavigationBar.appearance().tintColor = .customYellow
-            UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.customYellow]
-            UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.customYellow]
-            UINavigationBar.appearance().barStyle = .black
-            UINavigationBar.appearance().isTranslucent = false
-            UINavigationBar.appearance().shadowImage = UIImage()
-            
-            let navigationController = UINavigationController(rootViewController: SearchResultTVC())
-            navigationController.navigationBar.prefersLargeTitles = true
-            
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            self.window?.rootViewController = navigationController
-            self.window?.makeKeyAndVisible()
+            window = UIWindow(frame: UIScreen.main.bounds)
+            setNavigationBarAppearance()
+            RootRouter().presentSearchResultTVC(in: window!)
             return true
         }
 
@@ -53,6 +42,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
+    private func setNavigationBarAppearance(){
+        UINavigationBar.appearance().barTintColor = .customDarkBlue
+        UINavigationBar.appearance().tintColor = .customYellow
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.customYellow]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.customYellow]
+        UINavigationBar.appearance().barStyle = .black
+        UINavigationBar.appearance().isTranslucent = false
+        UINavigationBar.appearance().shadowImage = UIImage()
+    }
 
 }
 

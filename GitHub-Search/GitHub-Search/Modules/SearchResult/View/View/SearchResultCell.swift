@@ -14,14 +14,20 @@ class SearchResultCell: BaseCell{
     
     var imageLoader = ProfileImageLoaderVM()
     
-    var repo: SearchResultCellVM? {
+    var repo: Repository? {
         didSet{
             guard let repo = repo else { return }
             
             self.titleLabel.text = repo.name
-            self.forksAndWatchersLabel.text = repo.forksWathersText
+            self.forksAndWatchersLabel.text = "\(repo.forks) Forks   \(repo.watchers) Watchers"
             self.desLabel.text = repo.description ?? " "
-            self.detailsButton.alpha = CGFloat(repo.detailsButtonAlpha)
+            
+            if repo.forks > 0{
+                self.detailsButton.alpha = 1
+            }else{
+                self.detailsButton.alpha = 0
+            }
+            
             
             imageLoader.getProfileImage(for: repo.owner.avatar_url)
             imageLoader.image.bind { [weak self] (image) in
@@ -165,6 +171,7 @@ class SearchResultCell: BaseCell{
     
     @objc private func detailsButtonClicked(){
         guard let repo = repo else { return }
-        parentVC.showDetailsTVC(for: repo)
+        
+//        parentVC.showDetailsTVC(for: repo)
     }
 }

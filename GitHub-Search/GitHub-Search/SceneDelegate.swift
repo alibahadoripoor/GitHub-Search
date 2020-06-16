@@ -19,21 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        UINavigationBar.appearance().barTintColor = .customDarkBlue
-        UINavigationBar.appearance().tintColor = .customYellow
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.customYellow]
-        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.customYellow]
-        UINavigationBar.appearance().barStyle = .black
-        UINavigationBar.appearance().shadowImage = UIImage()
-        
-        let navigationController = UINavigationController(rootViewController: SearchResultTVC())
-        navigationController.navigationBar.prefersLargeTitles = true
-        
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
-        
+        setNavigationBarAppearance()
+        RootRouter().presentSearchResultTVC(in: window!)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -64,6 +53,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
+    private func setNavigationBarAppearance(){
+        UINavigationBar.appearance().barTintColor = .customDarkBlue
+        UINavigationBar.appearance().tintColor = .customYellow
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.customYellow]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.customYellow]
+        UINavigationBar.appearance().barStyle = .black
+        UINavigationBar.appearance().shadowImage = UIImage()
+    }
+    
 }
 
