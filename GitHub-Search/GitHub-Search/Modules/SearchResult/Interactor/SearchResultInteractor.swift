@@ -48,7 +48,6 @@ class SearchResultInteractor: SearchResultUseCase {
                 }
                 
             } catch {
-                print("Unable to decode data: \(error.localizedDescription)")
                 self.output.fetchFailed(error: .invalidData)
             }
             
@@ -85,7 +84,6 @@ class SearchResultInteractor: SearchResultUseCase {
                 }
                 
             } catch {
-                print("Unable to decode data: \(error.localizedDescription)")
                 self.output.fetchFailed(error: .invalidData)
             }
             

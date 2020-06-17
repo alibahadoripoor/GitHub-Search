@@ -12,24 +12,26 @@ private let forksCellId = "forksCellId"
 
 class DetailsTVC: UITableViewController {
 
+    var presenter: DetailsPresentation!
+    var isLastPage = false
+    var nextPage = 1
+    
     private var topIndicator = UIRefreshControl()
     private var centerIndicator = UIActivityIndicatorView(style: .white)
     private var bottomIndicator = UIActivityIndicatorView(style: .white)
-    private let viewModel = DetailsVM()
+
     private let header = DetailsHeaderView()
-    private var cells: [DetailsForkCellVM] = []
-    private var isRefreshing = false
-    private var isLastPage = false
-    private var nextPage = 1
+    private var cells: [User] = []
     
-    var detailsHeader: DetailsHeaderVM? {
+    
+    var repo: Repository? {
         didSet{
-            guard let detailsHeader = detailsHeader else { return }
-            if #available(iOS 13.0, *) {
+            guard let repo = repo else { return }
+            header.repo = repo
+            presenter.repoDidSet(ownerName: repo.owner.login, repoName: repo.name)
+            if #available(iOS 13.0, *){
                 centerIndicator.startAnimating()
             }
-            header.detailsHeader = detailsHeader
-            reloadDetails()
         }
     }
     
@@ -39,26 +41,7 @@ class DetailsTVC: UITableViewController {
         setupTableView()
         setupNavigation()
         setupIndicators()
-        
-        viewModel.fetchedCells.bind { [weak self] (cells) in
-            guard let self = self, let cells = cells else { return }
-            if self.isRefreshing{
-                self.cells = []
-                self.isRefreshing = false
-            }
-            self.cells += cells
-            self.nextPage += 1
-            self.tableView.tableFooterView?.isHidden = true
-            self.tableView.reloadData()
-            self.centerIndicator.stopAnimating()
-            self.topIndicator.endRefreshing()
-        }
-        
-        viewModel.isLastPage.bind { [weak self] (isLastPage) in
-            guard let self = self, let isLastPage = isLastPage else { return }
-            self.isLastPage = isLastPage
-        }
-        
+
     }
 
     deinit{
@@ -74,7 +57,7 @@ class DetailsTVC: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: forksCellId, for: indexPath) as! DetailsForkCell
-        cell.forkUser = cells[indexPath.item]
+        cell.user = cells[indexPath.item]
         cell.parentVC = self
         cell.indexPath = indexPath
         return cell
@@ -85,8 +68,8 @@ class DetailsTVC: UITableViewController {
         
         if indexPath.item == lastItemIndex && !isLastPage{
             self.tableView.tableFooterView?.isHidden = false
-            guard let detailsHeader = detailsHeader else { return }
-            viewModel.loadRepositoriesForks(for: detailsHeader.userName, repoName: detailsHeader.repoName, page: nextPage)
+            guard let repo = repo else { return }
+            presenter.nextPageForRepoForks(page: nextPage, ownerName: repo.owner.login, repoName: repo.name)
         }
     }
     
@@ -99,6 +82,29 @@ class DetailsTVC: UITableViewController {
         return 120
     }
     
+}
+
+extension DetailsTVC: DetailsView{
+    func showRepoForks(users: [User]) {
+        cells = users
+        tableView.reloadData()
+    }
+    
+    func showNextPage(users: [User]) {
+        cells += users
+        tableView.reloadData()
+    }
+    
+    func stopIndicators() {
+        tableView.tableFooterView?.isHidden = true
+        centerIndicator.stopAnimating()
+        topIndicator.endRefreshing()
+    }
+    
+    func showErrorAlert(error: HTTPError) {
+        //we can handel the errors here
+        debugPrint("Error: \(error.localizedDescription)")
+    }
 }
 
 extension DetailsTVC{
@@ -121,7 +127,7 @@ extension DetailsTVC{
         if navigationController?.viewControllers.count == 2 {
             title = "Details"
         }else{
-            title = detailsHeader?.repoName
+            title = repo?.name
         }
         
     }
@@ -143,33 +149,22 @@ extension DetailsTVC{
     }
     
     @objc dynamic private func reloadDetails(){
-        guard let detailsHeader = detailsHeader else { return }
-        nextPage = 1
-        isRefreshing = true
-        viewModel.loadRepositoriesForks(for: detailsHeader.userName, repoName: detailsHeader.repoName, page: nextPage)
+        guard let repo = repo else { return }
+        presenter.repoDidSet(ownerName: repo.owner.login, repoName: repo.name)
     }
     
     @objc private func leftBarButtonClicked(){
-        guard let homeVC = navigationController?.viewControllers[0] else { return }
-        navigationController?.popToViewController(homeVC, animated: true)
+        presenter.homeButtonClicked()
     }
     
-    func showSearchResultTVC(detailsHeader: DetailsHeaderVM?, forkUser: DetailsForkCellVM?, indexPath: IndexPath?){
-        let searchResultTVC = SearchResultTVC()
-        
-        if let detailsHeader = detailsHeader{
-            searchResultTVC.searchUserName = detailsHeader.userName
-        }
-        
-        if let forkUser = forkUser{
-            searchResultTVC.searchUserName = forkUser.userName
-        }
-        
+    func showSearchResultTVC(for user: User, indexPath: IndexPath?){
         if let indexPath = indexPath{
             tableView.deselectRow(at: indexPath, animated: false)
+            presenter.forkCellClicked(ownerName: user.login)
+        }else{
+            guard let repo = repo else { return }
+            presenter.ownerNameClicked(ownerName: repo.owner.login)
         }
-        
-        navigationController?.pushViewController(searchResultTVC, animated: true)
     }
     
 }

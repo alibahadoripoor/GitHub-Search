@@ -12,7 +12,7 @@ class SearchResultCell: BaseCell{
 
     weak var parentVC: SearchResultTVC!
     
-    var imageLoader = ProfileImageLoaderVM()
+    var imageLoader = ProfileImageLoader()
     
     var repo: Repository? {
         didSet{
@@ -171,7 +171,6 @@ class SearchResultCell: BaseCell{
     
     @objc private func detailsButtonClicked(){
         guard let repo = repo else { return }
-        
-//        parentVC.showDetailsTVC(for: repo)
+        parentVC.showDetailsTVC(for: repo)
     }
 }

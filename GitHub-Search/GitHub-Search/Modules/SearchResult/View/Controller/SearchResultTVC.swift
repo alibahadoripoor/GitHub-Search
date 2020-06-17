@@ -29,8 +29,10 @@ class SearchResultTVC: UITableViewController {
         didSet{
             guard let searchQuery = searchQuery else { return }
             backImageView.alpha = 0
-            centerIndicator.startAnimating()
             presenter.searchQueryDidSet(query: searchQuery)
+            if #available(iOS 13.0, *){
+                centerIndicator.startAnimating()
+            }
         }
     }
     
@@ -38,8 +40,10 @@ class SearchResultTVC: UITableViewController {
         didSet{
             guard let searchUserName = searchUserName else { return }
             backImageView.alpha = 0
-            centerIndicator.startAnimating()
             presenter.searchUserNameDidSet(ownerName: searchUserName)
+            if #available(iOS 13.0, *){
+                centerIndicator.startAnimating()
+            }
         }
     }
     
@@ -50,12 +54,6 @@ class SearchResultTVC: UITableViewController {
         setupNavigation()
         setupIndicators()
 
-//        viewModel.fetchedDetails.bind { [weak self] (detailsHeader) in
-//            guard let self = self, let detailsHeader = detailsHeader else { return }
-//            let detailsTVC = DetailsTVC(style: .grouped)
-//            detailsTVC.detailsHeader = detailsHeader
-//            self.navigationController?.pushViewController(detailsTVC, animated: true)
-//        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -102,15 +100,10 @@ class SearchResultTVC: UITableViewController {
         
         if indexPath.item == lastItemIndex && !isLastPage{
             self.tableView.tableFooterView?.isHidden = false
-            
-            if let searchQuery = searchQuery{
-                // request for searched repositories, SearcVC is ParentVC
-                presenter.nextPageForQuerySearchResult(page: nextPage, query: searchQuery)
-            }
-            
-            if let searchUserName = searchUserName{
-                // request for user repositories, DetailsTVC is ParentVC
-                presenter.nextPageForUserRepos(page: nextPage, ownerName: searchUserName)
+            if navigationController?.viewControllers.count == 1 {
+                presenter.nextPageForQuerySearchResult(page: nextPage, query: searchQuery!)
+            }else{
+                presenter.nextPageForUserRepos(page: nextPage, ownerName: searchUserName!)
             }
         }
         
@@ -137,9 +130,9 @@ extension SearchResultTVC: SearchResultView{
     }
     
     func stopIndicators() {
+        tableView.tableFooterView?.isHidden = true
         centerIndicator.stopAnimating()
         topIndicator.endRefreshing()
-        tableView.tableFooterView?.isHidden = true
     }
     
     func showBackgroundImage(){
@@ -148,6 +141,7 @@ extension SearchResultTVC: SearchResultView{
     
     func showErrorAlert(error: HTTPError) {
         //Here we can Handel the errors
+        debugPrint("Error: \(error.localizedDescription)")
     }
 }
 
@@ -205,19 +199,15 @@ extension SearchResultTVC{
     }
     
     @objc dynamic private func reloadResults(){
-        if let searchQuery = searchQuery{
-            // reload searched repositories, SearcVC is ParentVC
-            presenter.nextPageForQuerySearchResult(page: 1, query: searchQuery)
-        }
-        
-        if let searchUserName = searchUserName{
-            // reload user repositories, DetailsTVC is ParentVC
-            presenter.nextPageForUserRepos(page: 1, ownerName: searchUserName)
+        if navigationController?.viewControllers.count == 1 {
+            presenter.nextPageForQuerySearchResult(page: 1, query: searchQuery!)
+        }else{
+            presenter.nextPageForUserRepos(page: 1, ownerName: searchUserName!)
         }
     }
     
-    func showDetailsTVC(for repo: SearchResultCellVM){
-//        viewModel.fetchDetails(for: repo)
+    func showDetailsTVC(for repo: Repository){
+        presenter.detailsButtonClicked(for: repo)
     }
     
 }

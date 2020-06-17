@@ -12,7 +12,7 @@ import UIKit.UIImageView
 //Creating the cache object
 let imageCache = NSCache<NSString, UIImage>()
 
-class ProfileImageLoaderVM{
+class ProfileImageLoader{
    
     private var service: ProfileImageServiceProtocol!
     var image: Box<UIImage?> = Box(nil)

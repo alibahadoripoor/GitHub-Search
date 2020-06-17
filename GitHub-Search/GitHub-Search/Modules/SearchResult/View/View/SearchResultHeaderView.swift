@@ -9,14 +9,7 @@
 import UIKit
 
 class SearchResultHeaderView: BaseView {
-    
-//    var searchResultHeader: SearchResultHeaderVM?{
-//        didSet{
-//            guard let searchResultHeader = searchResultHeader else { return }
-//            self.label.text = searchResultHeader.headerText
-//        }
-//    }
-    
+
     let label = UILabel()
     
     override func setupViews() {

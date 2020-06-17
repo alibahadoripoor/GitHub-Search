@@ -8,6 +8,13 @@
 
 import Foundation
 
+enum HTTPError: Error {
+    case invalidResponse
+    case noData
+    case failedRequest
+    case invalidData
+}
+
 typealias fetchDataCompletion = (Data?, HTTPError?) -> ()
 
 class DataService{

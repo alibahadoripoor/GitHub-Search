@@ -43,6 +43,7 @@ protocol SearchResultPresentation: class {
     
     func searchButtonClicked()
     func homeButtonClicked()
+    func detailsButtonClicked(for repo: Repository)
     func searchQueryDidSet(query: String)
     func searchUserNameDidSet(ownerName: String)
     func nextPageForQuerySearchResult(page: Int, query: String)
@@ -52,11 +53,11 @@ protocol SearchResultPresentation: class {
 protocol SearchResultWireFrame: class {
     var viewController: UIViewController? { get set }
     
+    func presentDetails(repo: Repository)
     func presentSearchVC()
-    func presentDetails()
     func PresentHomeVC()
     
-    static func assembleModule() -> UIViewController
+    func assembleModule() -> UIViewController
 }
 
 

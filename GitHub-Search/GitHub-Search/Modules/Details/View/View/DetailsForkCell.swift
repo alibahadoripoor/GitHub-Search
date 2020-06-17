@@ -13,14 +13,14 @@ class DetailsForkCell: BaseCell{
     weak var parentVC: DetailsTVC!
     var indexPath: IndexPath!
     
-    var imageLoader = ProfileImageLoaderVM()
+    var imageLoader = ProfileImageLoader()
     
-    var forkUser: DetailsForkCellVM? {
+    var user: User? {
         didSet{
-            guard let forkUser = forkUser else { return }
-            self.titleLabel.text = forkUser.userName
+            guard let user = user else { return }
+            self.titleLabel.text = user.login
             
-            imageLoader.getProfileImage(for: forkUser.userImageUrl)
+            imageLoader.getProfileImage(for: user.avatar_url)
             imageLoader.image.bind { [weak self] (image) in
                 guard let self = self else { return }
                 self.profileImageView.image = image
@@ -112,8 +112,8 @@ class DetailsForkCell: BaseCell{
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
-            guard let forkUser = forkUser else { return }
-            parentVC.showSearchResultTVC(detailsHeader: nil, forkUser: forkUser, indexPath: indexPath)
+            guard let user = user else { return }
+            parentVC.showSearchResultTVC(for: user, indexPath: indexPath)
         }
     }
     

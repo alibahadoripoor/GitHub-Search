@@ -21,6 +21,10 @@ class SearchResultPresenter: SearchResultPresentation{
         router?.PresentHomeVC()
     }
 
+    func detailsButtonClicked(for repo: Repository) {
+        router?.presentDetails(repo: repo)
+    }
+    
     func searchQueryDidSet(query: String) {
         interactor?.fetchRepositoriesObject(for: 1, query: query)
     }

@@ -12,15 +12,12 @@ class SearchResultRouter: SearchResultWireFrame {
     
     weak var viewController: UIViewController?
     
-    static func assembleModule() -> UIViewController {
+    func assembleModule() -> UIViewController {
         let view = SearchResultTVC()
         let presenter = SearchResultPresenter()
         let interactor = SearchResultInteractor()
         let router = SearchResultRouter()
                 
-        let navigationController = UINavigationController(rootViewController: view)
-        navigationController.navigationBar.prefersLargeTitles = true
-        
         view.presenter = presenter
         
         presenter.view = view
@@ -31,11 +28,13 @@ class SearchResultRouter: SearchResultWireFrame {
         
         router.viewController = view
         
-        return navigationController
+        return view
     }
     
-    func presentDetails() {
-        
+    func presentDetails(repo: Repository) {
+        let detailsTVC = DetailsRouter().assembleModule() as! DetailsTVC
+        detailsTVC.repo = repo
+        viewController?.navigationController?.pushViewController(detailsTVC, animated: true)
     }
     
     func presentSearchVC() {

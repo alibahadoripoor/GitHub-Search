@@ -11,15 +11,15 @@ import UIKit
 class DetailsHeaderView: BaseView {
     
     weak var paretVC: DetailsTVC!
-    var imageLoader = ProfileImageLoaderVM()
+    var imageLoader = ProfileImageLoader()
     
-    var detailsHeader: DetailsHeaderVM?{
+    var repo: Repository?{
         didSet{
-            guard let detailsHeader = detailsHeader else { return }
-            userNameButton.setTitle(detailsHeader.userName, for: .normal)
-            repoNameLabel.text = detailsHeader.repoName
+            guard let repo = repo else { return }
+            userNameButton.setTitle(repo.owner.login, for: .normal)
+            repoNameLabel.text = repo.name
             
-            imageLoader.getProfileImage(for: detailsHeader.imageURL)
+            imageLoader.getProfileImage(for: repo.owner.avatar_url)
             imageLoader.image.bind { [weak self] (image) in
                 guard let self = self else { return }
                 self.profileImageView.image = image
@@ -89,6 +89,7 @@ class DetailsHeaderView: BaseView {
     }
     
     @objc private func userNameButtonButtonClicked(){
-        paretVC.showSearchResultTVC(detailsHeader: detailsHeader, forkUser: nil, indexPath: nil)
+        guard let repo = repo else { return }
+        paretVC.showSearchResultTVC(for: repo.owner, indexPath: nil)
     }
 }
